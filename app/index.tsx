@@ -1,13 +1,28 @@
+// ...existing code...
+import { useAuthContext } from '@/contexts/AuthContext';
+import { Redirect } from 'expo-router';
+import { ActivityIndicator, Text, View } from 'react-native';
 
-import { Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+export default function Index() {
+  const { user, privacyAccepted, loading } = useAuthContext();
 
-export default function HomeScreen() {
-  return (
-    <SafeAreaView className="items-center justify-center flex-1 bg-white">
-      <Text className="text-xl font-bold text-blue-500">
-        Welcome to Nativewind!!
-      </Text>
-    </SafeAreaView>
-  );
+  if (loading) {
+    return (
+      <View className="items-center justify-center flex-1 bg-gray-900">
+        <ActivityIndicator size="large" color="#3B82F6" />
+        <Text className="mt-4 text-lg text-white">Cargando...</Text>
+      </View>
+    );
+  }
+
+  if (!user) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
+
+  if (!privacyAccepted) {
+    return <Redirect href="/(auth)/privacy-policy" />;
+  }
+
+  return <Redirect href="/(app)/projects" />;
 }
+// ...existing code...
